@@ -22,9 +22,16 @@ class Repository(ABC):
     def save(self, obj) -> None:
         """Save an object"""
 
-    @abstractmethod
-    def update(self, obj) -> None:
-        """Update an object"""
+    def update(self, obj):
+        """Update an instance in the database or file system"""
+        from src.models import db
+        if self.use_database:
+            db.session.add(obj)
+            db.session.commit()  # Commit después de actualizar
+            return obj
+        else:
+            return self._file_update(obj)
+
 
     @abstractmethod
     def delete(self, obj) -> bool:

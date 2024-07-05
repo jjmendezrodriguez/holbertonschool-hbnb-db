@@ -3,21 +3,22 @@ Amenity related functionality
 """
 
 from src.models.base import Base
-
+from . import db
 
 class Amenity(Base):
     """Amenity representation"""
 
-    name: str
+    __tablename__ = 'amenities'
+
+    name = db.Column(db.String(128), nullable=False)
 
     def __init__(self, name: str, **kw) -> None:
-        """Dummy init"""
+        """Init"""
         super().__init__(**kw)
-
         self.name = name
 
     def __repr__(self) -> str:
-        """Dummy repr"""
+        """Repr"""
         return f"<Amenity {self.id} ({self.name})>"
 
     def to_dict(self) -> dict:
@@ -61,18 +62,19 @@ class Amenity(Base):
 class PlaceAmenity(Base):
     """PlaceAmenity representation"""
 
-    place_id: str
-    amenity_id: str
+    __tablename__ = 'place_amenities'
+
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    amenity_id = db.Column(db.String(36), db.ForeignKey('amenities.id'), nullable=False)
 
     def __init__(self, place_id: str, amenity_id: str, **kw) -> None:
-        """Dummy init"""
+        """Init"""
         super().__init__(**kw)
-
         self.place_id = place_id
         self.amenity_id = amenity_id
 
     def __repr__(self) -> str:
-        """Dummy repr"""
+        """Repr"""
         return f"<PlaceAmenity ({self.place_id} - {self.amenity_id})>"
 
     def to_dict(self) -> dict:

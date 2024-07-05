@@ -4,14 +4,12 @@ Users controller module
 
 from flask import abort, request
 from src.models.user import User
-
+import uuid
 
 def get_users():
     """Returns all users"""
-    users: list[User] = User.get_all()
-
-    return [user.to_dict() for user in users]
-
+    users = User.get_all()
+    return [user.to_dict() for user in users], 200
 
 def create_user():
     """Creates a new user"""
@@ -19,6 +17,7 @@ def create_user():
 
     try:
         user = User.create(data)
+        user.save()
     except KeyError as e:
         abort(400, f"Missing field: {e}")
     except ValueError as e:
@@ -29,16 +28,14 @@ def create_user():
 
     return user.to_dict(), 201
 
-
 def get_user_by_id(user_id: str):
     """Returns a user by ID"""
-    user: User | None = User.get(user_id)
+    user = User.get(user_id)
 
     if not user:
         abort(404, f"User with ID {user_id} not found")
 
     return user.to_dict(), 200
-
 
 def update_user(user_id: str):
     """Updates a user by ID"""
@@ -53,7 +50,6 @@ def update_user(user_id: str):
         abort(404, f"User with ID {user_id} not found")
 
     return user.to_dict(), 200
-
 
 def delete_user(user_id: str):
     """Deletes a user by ID"""

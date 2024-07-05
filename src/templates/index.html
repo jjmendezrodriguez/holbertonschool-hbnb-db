@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Data Persistence</title>
+    <script>
+        function togglePersistence(selected) {
+            fetch('/toggle-persistence', {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                updateButtonState(selected);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function updateButtonState(selected) {
+            const dbButton = document.getElementById('db-button');
+            const jsonButton = document.getElementById('json-button');
+            if (selected === 'db') {
+                dbButton.classList.add('active');
+                jsonButton.classList.remove('active');
+            } else {
+                dbButton.classList.remove('active');
+                jsonButton.classList.add('active');
+            }
+        }
+
+        window.onload = function() {
+            fetch('/get-persistence-mode')
+            .then(response => response.json())
+            .then(data => {
+                updateButtonState(data.mode);
+            });
+        }
+    </script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('/static/database.webp');
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            text-align: center;
+            transform: translateY(-50px);
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+        .toggle-buttons {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 5px;
+        }
+        .toggle-buttons button {
+            padding: 20px 40px;
+            font-size: 18px;
+            margin: 0;
+        }
+        .toggle-buttons button.active {
+            background-color: #4caf50;
+            color: white;
+        }
+        button:first-child {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        button:last-child {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        a.button-link {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Toggle Data Persistence</h1>
+        <div class="button-container">
+            <div class="toggle-buttons">
+                <button id="db-button" onclick="togglePersistence('db')">Database</button>
+                <button id="json-button" onclick="togglePersistence('json')">Storage JSON</button>
+            </div>
+            <a href="/users" class="button-link"><button>Users</button></a>
+            <a href="/amenities" class="button-link"><button>Amenities</button></a>
+            <a href="/cities" class="button-link"><button>Cities</button></a>
+            <a href="/places" class="button-link"><button>Places</button></a>
+            <a href="/reviews" class="button-link"><button>Reviews</button></a>
+            <a href="/countries" class="button-link"><button>Countries</button></a>
+        </div>
+    </div>
+</body>
+</html>

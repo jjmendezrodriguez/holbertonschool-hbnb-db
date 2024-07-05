@@ -9,7 +9,7 @@ from utils.constants import REPOSITORY_ENV_VAR
 repo: Repository
 
 if os.getenv(key=REPOSITORY_ENV_VAR) == "db":
-    from src.persistence.db import DBRepository
+    from src.persistence.data_manager import DBRepository
 
     repo = DBRepository()
 elif os.getenv(REPOSITORY_ENV_VAR) == "file":

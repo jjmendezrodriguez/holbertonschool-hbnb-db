@@ -4,23 +4,24 @@ City related functionality
 
 from src.models.base import Base
 from src.models.country import Country
-
+from . import db
 
 class City(Base):
     """City representation"""
 
-    name: str
-    country_code: str
+    __tablename__ = 'cities'
+
+    name = db.Column(db.String(128), nullable=False)
+    country_code = db.Column(db.String(3), db.ForeignKey('countries.code'), nullable=False)
 
     def __init__(self, name: str, country_code: str, **kw) -> None:
-        """Dummy init"""
+        """Init"""
         super().__init__(**kw)
-
         self.name = name
         self.country_code = country_code
 
     def __repr__(self) -> str:
-        """Dummy repr"""
+        """Repr"""
         return f"<City {self.id} ({self.name})>"
 
     def to_dict(self) -> dict:
@@ -29,8 +30,8 @@ class City(Base):
             "id": self.id,
             "name": self.name,
             "country_code": self.country_code,
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat(),
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
 
     @staticmethod

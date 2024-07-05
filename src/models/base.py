@@ -1,19 +1,22 @@
-""" Abstract base class for all models """
-
 from datetime import datetime
 from typing import Any, Optional
 import uuid
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from src.models import db
+from sqlalchemy.ext.declarative import declarative_base
 
+db_base = declarative_base()
 
-class Base(ABC):
+class Base(db.Model):
     """
     Base Interface for all models
     """
 
-    id: str
-    created_at: datetime
-    updated_at: datetime
+    __abstract__ = True  # This makes SQLAlchemy understand this class should not be created as a table
+
+    id = db.Column(db.String(36), primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
     def __init__(
         self,
@@ -26,7 +29,6 @@ class Base(ABC):
         Base class constructor
         If kwargs are provided, set them as attributes
         """
-
         if kwargs:
             for key, value in kwargs.items():
                 if hasattr(self, key):
@@ -34,21 +36,23 @@ class Base(ABC):
                 setattr(self, key, value)
 
         self.id = str(id or uuid.uuid4())
-        self.created_at = created_at or datetime.now()
-        self.updated_at = updated_at or datetime.now()
+        self.created_at = created_at or datetime.utcnow()
+        self.updated_at = updated_at or datetime.utcnow()
 
     @classmethod
     def get(cls, id) -> "Any | None":
         """
-        This is a common method to get an specific object
+        This is a common method to get a specific object
         of a class by its id
 
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
+        from src.persistence.data_manager import DBRepository
+        
+        storage = DBRepository()
 
-        return repo.get(cls.__name__.lower(), id)
+        return storage.get(cls.__name__.lower(), id)
 
     @classmethod
     def get_all(cls) -> list["Any"]:
@@ -58,19 +62,20 @@ class Base(ABC):
         If a class needs a different implementation,
         it should override this method
         """
-        from src.persistence import repo
+        from src.persistence.data_manager import DBRepository
+        storage = DBRepository()
 
-        return repo.get_all(cls.__name__.lower())
+        return storage.get_all(cls.__name__.lower())
 
-    @classmethod
-    def delete(cls, id) -> bool:
+    # @classmethod
+    # def delete(cls, id) -> bool:
         """
-        This is a common method to delete an specific
+        This is a common method to delete a specific
         object of a class by its id
 
         If a class needs a different implementation,
         it should override this method
-        """
+        
         from src.persistence import repo
 
         obj = cls.get(id)
@@ -78,7 +83,18 @@ class Base(ABC):
         if not obj:
             return False
 
-        return repo.delete(obj)
+        return repo.delete(obj)"""
+    
+    @classmethod
+    def delete(cls, id: str) -> bool:
+        """Delete a user by ID"""
+        from src.persistence.data_manager import DBRepository
+        storage = DBRepository()
+        obj = cls.get(id)
+        if obj:
+            storage.delete(obj)
+            return True
+        return False
 
     @abstractmethod
     def to_dict(self) -> dict:
@@ -93,3 +109,9 @@ class Base(ABC):
     @abstractmethod
     def update(entity_id: str, data: dict) -> Any | None:
         """Updates an object of the class"""
+        
+    def save(self):
+        from src.persistence.data_manager import DBRepository
+        storage = DBRepository()
+        storage.save(self)
+        

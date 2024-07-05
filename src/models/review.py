@@ -5,29 +5,30 @@ Review related functionality
 from src.models.base import Base
 from src.models.place import Place
 from src.models.user import User
-
+from . import db
 
 class Review(Base):
     """Review representation"""
 
-    place_id: str
-    user_id: str
-    comment: str
-    rating: float
+    __tablename__ = 'reviews'
+
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    comment = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
 
     def __init__(
         self, place_id: str, user_id: str, comment: str, rating: float, **kw
     ) -> None:
-        """Dummy init"""
+        """Init"""
         super().__init__(**kw)
-
         self.place_id = place_id
         self.user_id = user_id
         self.comment = comment
         self.rating = rating
 
     def __repr__(self) -> str:
-        """Dummy repr"""
+        """Repr"""
         return f"<Review {self.id} - '{self.comment[:25]}...'>"
 
     def to_dict(self) -> dict:

@@ -1,0 +1,42 @@
+{
+    "user": [
+        {
+            "id": "a6a6ab9a-6da9-43a3-8f61-2e230ada86f0",
+            "email": "test3@example.com",
+            "first_name": "Jose",
+            "last_name": "Doe",
+            "password": "password123",
+            "is_admin": false,
+            "created_at": "2024-07-04T16:40:31.596974",
+            "updated_at": "2024-07-04T16:40:31.596981"
+        },
+        {
+            "id": "8d03ad0f-b247-429d-ab44-812b9d0d3281",
+            "email": "test@example.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "password": "password123",
+            "is_admin": false,
+            "created_at": "2024-07-04T16:40:36.108442",
+            "updated_at": "2024-07-04T16:40:36.108445"
+        }
+    ],
+    "amenity": [
+        {
+            "id": "dccadfab-86fe-4ae8-be22-f5ab7b1a0d7c",
+            "name": "WiFi",
+            "created_at": "2024-07-05T01:19:16.602068",
+            "updated_at": "2024-07-05T01:19:16.602074"
+        }
+    ],
+    "country": [
+        {
+            "name": "Canada",
+            "code": "CA"
+        },
+        {
+            "name": "United States",
+            "code": "US"
+        }
+    ]
+}
