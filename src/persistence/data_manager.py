@@ -150,8 +150,19 @@ class DBRepository(Repository):
         model_name = obj.__class__.__name__.lower()
         if model_name not in data:
             data[model_name] = []
-        data[model_name].append(obj.to_dict())
+
+        obj_dict = obj.to_dict()
+        if model_name == "country":
+            # Si es un país, verifica si ya existe antes de añadirlo
+            for item in data[model_name]:
+                if item['code'] == obj_dict['code']:
+                    raise ValueError(f"Country with code {obj_dict['code']} already exists")
+        else:
+            # Si no es un país, añade el objeto normalmente
+            data[model_name].append(obj_dict)
+        
         self._save_data(data)
+
 
     def _file_update(self, obj):
         """Update an instance in the file"""

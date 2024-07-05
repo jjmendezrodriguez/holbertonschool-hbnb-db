@@ -35,7 +35,8 @@ class Base(db.Model):
                     continue
                 setattr(self, key, value)
 
-        self.id = str(id or uuid.uuid4())
+        if self.__class__.__name__.lower() != 'country':
+            self.id = str(id or uuid.uuid4())
         self.created_at = created_at or datetime.utcnow()
         self.updated_at = updated_at or datetime.utcnow()
 
@@ -52,7 +53,10 @@ class Base(db.Model):
         
         storage = DBRepository()
 
-        return storage.get(cls.__name__.lower(), id)
+        if cls.__name__.lower() == 'country':
+            return storage.get('country', id)
+        else:
+            return storage.get(cls.__name__.lower(), id)
 
     @classmethod
     def get_all(cls) -> list["Any"]:
@@ -67,30 +71,17 @@ class Base(db.Model):
 
         return storage.get_all(cls.__name__.lower())
 
-    # @classmethod
-    # def delete(cls, id) -> bool:
-        """
-        This is a common method to delete a specific
-        object of a class by its id
-
-        If a class needs a different implementation,
-        it should override this method
-        
-        from src.persistence import repo
-
-        obj = cls.get(id)
-
-        if not obj:
-            return False
-
-        return repo.delete(obj)"""
-    
     @classmethod
     def delete(cls, id: str) -> bool:
-        """Delete a user by ID"""
+        """Delete an instance by ID"""
         from src.persistence.data_manager import DBRepository
         storage = DBRepository()
-        obj = cls.get(id)
+
+        if cls.__name__.lower() == 'country':
+            obj = cls.get(id)
+        else:
+            obj = cls.query.get(id)
+
         if obj:
             storage.delete(obj)
             return True
@@ -113,5 +104,11 @@ class Base(db.Model):
     def save(self):
         from src.persistence.data_manager import DBRepository
         storage = DBRepository()
-        storage.save(self)
-        
+        if self.__class__.__name__.lower() == 'country':
+            if storage.use_database:
+                db.session.add(self)
+                db.session.commit()
+            else:
+                storage.save(self)
+        else:
+            storage.save(self)
