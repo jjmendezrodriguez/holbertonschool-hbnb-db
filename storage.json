@@ -37,29 +37,41 @@
         {
             "name": "United States",
             "code": "US"
+        },
+        {
+            "name": "United Kingdom",
+            "code": "UK"
+        },
+        {
+            "name": "Brazil",
+            "code": "BR"
+        },
+        {
+            "name": "Spain",
+            "code": "ES"
         }
     ],
     "city": [
         {
             "id": "e9dc2e41-da47-4c5b-83e5-a4b15b5ebe05",
             "name": "New York",
-            "country_code": "US",
+            "code": "US",
             "created_at": "2024-07-05T17:59:21.872695",
             "updated_at": "2024-07-05T17:59:21.872700"
         },
         {
-            "id": "b47d03f0-20a4-4871-96e3-9cbda4452583",
-            "name": "Florida",
-            "country_code": "US",
-            "created_at": "2024-07-05T18:15:58.908636",
-            "updated_at": "2024-07-05T18:15:58.908639"
-        },
-        {
             "id": "4eb7a62d-a47e-49db-8f18-422d7daaf7ef",
             "name": "Dallas",
-            "country_code": "US",
+            "code": "US",
             "created_at": "2024-07-05T18:16:16.324994",
             "updated_at": "2024-07-05T18:16:16.324996"
+        },
+        {
+            "id": "a84d1c17-d7cb-46ba-98d7-281e9543cf09",
+            "name": "California",
+            "code": "US",
+            "created_at": "2024-07-05T23:44:30.330258",
+            "updated_at": "2024-07-05T23:44:30.330261"
         }
     ]
 }

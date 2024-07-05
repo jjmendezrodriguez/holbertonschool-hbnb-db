@@ -2,8 +2,11 @@
 City related functionality
 """
 
-from src.models.base import Base
 from src.models.country import Country
+import uuid
+# src/models/city.py
+
+from src.models.base import Base
 from . import db
 
 class City(Base):
@@ -12,13 +15,13 @@ class City(Base):
     __tablename__ = 'cities'
 
     name = db.Column(db.String(128), nullable=False)
-    country_code = db.Column(db.String(3), db.ForeignKey('countries.code'), nullable=False)
+    code = db.Column(db.String(3), db.ForeignKey('countries.code'), nullable=False)
 
-    def __init__(self, name: str, country_code: str, **kw) -> None:
+    def __init__(self, name: str, code: str, **kwargs):
         """Init"""
-        super().__init__(**kw)
+        super().__init__(**kwargs)
         self.name = name
-        self.country_code = country_code
+        self.code = code
 
     def __repr__(self) -> str:
         """Repr"""
@@ -29,7 +32,7 @@ class City(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "country_code": self.country_code,
+            "code": self.code,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
@@ -37,32 +40,25 @@ class City(Base):
     @staticmethod
     def create(data: dict) -> "City":
         """Create a new city"""
-        from src.persistence import repo
+        from src.persistence.data_manager import DBRepository
+        storage = DBRepository()
 
-        country = Country.get(data["country_code"])
+        # Generar un ID si no se proporciona
+        if 'id' not in data:
+            data['id'] = str(uuid.uuid4())
 
-        if not country:
-            raise ValueError("Country not found")
+        # Verificar si la ciudad ya existe en la base de datos
+        if storage.use_database:
+            existing_city = City.query.get(data["id"])
+            if existing_city:
+                raise ValueError(f"City with id {data['id']} already exists")
 
-        city = City(**data)
+        # Verificar si la ciudad ya existe en el archivo JSON
+        else:
+            existing_city = storage.get("city", data["id"])
+            if existing_city:
+                raise ValueError(f"City with id {data['id']} already exists")
 
-        repo.save(city)
-
-        return city
-
-    @staticmethod
-    def update(city_id: str, data: dict) -> "City":
-        """Update an existing city"""
-        from src.persistence import repo
-
-        city = City.get(city_id)
-
-        if not city:
-            raise ValueError("City not found")
-
-        for key, value in data.items():
-            setattr(city, key, value)
-
-        repo.update(city)
-
-        return city
+        new_city = City(name=data["name"], code=data["code"], id=data["id"])
+        storage.save(new_city)
+        return new_city

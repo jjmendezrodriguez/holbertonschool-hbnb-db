@@ -40,8 +40,8 @@ class Country(Base):
     def get_all() -> list["Country"]:
         """Get all countries"""
         from src.persistence.data_manager import DBRepository
-        storege = DBRepository()
-        return storege.get_all("country")
+        storage = DBRepository()
+        return storage.get_all("country")
 
     @staticmethod
     def get(code: str) -> "Country | None":
@@ -52,7 +52,7 @@ class Country(Base):
             return Country.query.get(code)
         else:
             return storage.get("country", code)
-    
+
     @staticmethod
     def create(data: dict) -> "Country":
         """Create a new country"""
@@ -72,6 +72,5 @@ class Country(Base):
                 raise ValueError(f"Country with code {data['code']} already exists")
 
         new_country = Country(name=data["name"], code=data["code"])
-        storage.save(new_country) # si activo clona el country.
+        storage.save(new_country)
         return new_country
-

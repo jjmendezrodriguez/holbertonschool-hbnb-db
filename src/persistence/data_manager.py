@@ -147,6 +147,7 @@ class DBRepository(Repository):
     def _file_save(self, obj) -> None:
         """Save an instance to the file"""
         data = self._load_data()
+        print(f"Data loaded: {data}")  # Verificar carga de datos
         model_name = obj.__class__.__name__.lower()
         if model_name not in data:
             data[model_name] = []
@@ -157,12 +158,18 @@ class DBRepository(Repository):
             for item in data[model_name]:
                 if item['code'] == obj_dict['code']:
                     raise ValueError(f"Country with code {obj_dict['code']} already exists")
+            data[model_name].append(obj_dict)
+        elif model_name == "city":
+            # Si es una ciudad, verifica si ya existe antes de añadirla
+            for item in data[model_name]:
+                if item['id'] == obj_dict['id']:
+                    raise ValueError(f"City with id {obj_dict['id']} already exists")
+            data[model_name].append(obj_dict)
         else:
-            # Si no es un país, añade el objeto normalmente
             data[model_name].append(obj_dict)
         
         self._save_data(data)
-
+        print(f"Data saved: {data}")  # Verificar guardado de datos
 
     def _file_update(self, obj):
         """Update an instance in the file"""
@@ -201,6 +208,8 @@ class DBRepository(Repository):
         """Save data to the file"""
         with open(self.file_path, 'w') as f:
             json.dump(data, f, indent=4)
+        #print(f"Data written to file: {data}")  # Verificar escritura de datos en archivo
+
 
     def _dict_to_model(self, model_name: str, data: dict):
         """Convert a dictionary to a model instance"""

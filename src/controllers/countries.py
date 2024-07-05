@@ -49,21 +49,21 @@ def delete_country(code: str):
 
     return "", 204
 
-# def update_country(code: str):
-#     """Updates a country by code"""
-#     data = request.get_json()
+def update_country(code: str):
+    """Updates a country by code"""
+    data = request.get_json()
 
-#     country = Country.get(code)
-#     if not country:
-#         abort(404, f"Country with code {code} not found")
+    country = Country.get(code)
+    if not country:
+        abort(404, f"Country with code {code} not found")
 
-#     # Update the fields
-#     if "name" in data:
-#         country.name = data["name"]
+    # Update the fields
+    if "name" in data:
+        country.name = data["name"]
 
-#     try:
-#         country.save()
-#     except ValueError as e:
-#         abort(400, str(e))
+    try:
+        country.save()
+    except ValueError as e:
+        abort(400, str(e))
 
-#     return country.to_dict(), 200
+    return country.to_dict(), 200
