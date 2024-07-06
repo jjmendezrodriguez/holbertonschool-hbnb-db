@@ -19,6 +19,7 @@ def create_review(place_id: str):
 
     try:
         review = Review.create(data | {"place_id": place_id})
+        review.save()
     except KeyError as e:
         abort(400, f"Missing field: {e}")
     except ValueError as e:

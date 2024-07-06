@@ -2,10 +2,9 @@
 Country related functionality
 """
 
-from src.models.base import Base
 from . import db
 
-class Country(Base):
+class Country(db.Model):
     """
     Country representation
 
@@ -21,7 +20,7 @@ class Country(Base):
 
     def __init__(self, name: str, code: str, **kw):
         """Init"""
-        super().__init__(**kw)
+        
         self.name = name
         self.code = code
 
@@ -74,3 +73,8 @@ class Country(Base):
         new_country = Country(name=data["name"], code=data["code"])
         storage.save(new_country)
         return new_country
+    
+    def save(self):
+        from src.persistence.data_manager import DBRepository
+        storage = DBRepository()
+        storage.save(self)

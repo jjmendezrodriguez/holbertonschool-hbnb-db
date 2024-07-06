@@ -104,11 +104,4 @@ class Base(db.Model):
     def save(self):
         from src.persistence.data_manager import DBRepository
         storage = DBRepository()
-        if self.__class__.__name__.lower() == 'country':
-            if storage.use_database:
-                db.session.add(self)
-                db.session.commit()
-            else:
-                storage.save(self)
-        else:
-            storage.save(self)
+        storage.save(self)

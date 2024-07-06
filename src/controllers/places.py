@@ -16,6 +16,7 @@ def create_place():
 
     try:
         place = Place.create(data)
+        place.save()
     except KeyError as e:
         abort(400, f"Missing field: {e}")
     except ValueError as e:
