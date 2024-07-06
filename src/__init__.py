@@ -4,6 +4,7 @@ from src.models import db
 import os
 from sqlalchemy_utils import database_exists, create_database
 import subprocess
+from flask_jwt_extended import JWTManager
 
 cors = CORS()
 
@@ -29,6 +30,7 @@ def create_app(config_class=None) -> Flask:
             config_class = 'src.config.DevelopmentConfig'
 
     app.config.from_object(config_class)
+    app.config['JWT_SECRET_KEY'] = 'Jm1234' #password
 
     register_routes(app)
     register_extensions(app)
@@ -41,8 +43,9 @@ def register_extensions(app: Flask) -> None:
     """Register the extensions for the Flask app"""
     cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
+    jwt = JWTManager(app)
     with app.app_context():
-        db.create_all()  # Asegúrate de crear todas las tablas
+        db.create_all()
     # Further extensions can be added here
 
 def register_routes(app: Flask) -> None:
@@ -53,6 +56,7 @@ def register_routes(app: Flask) -> None:
     from src.routes.places import places_bp
     from src.routes.amenities import amenities_bp
     from src.routes.reviews import reviews_bp
+    from src.routes.login import login_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(countries_bp)
@@ -60,6 +64,7 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(places_bp)
     app.register_blueprint(reviews_bp)
     app.register_blueprint(amenities_bp)
+    app.register_blueprint(login_bp)
     
     @app.route('/')
     def index():

@@ -21,6 +21,8 @@ class Config(ABC):
     TESTING = False
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'Jm1234') #password
+
 
 
 class DevelopmentConfig(Config):
