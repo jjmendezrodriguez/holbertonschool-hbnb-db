@@ -15,7 +15,7 @@ class Country(db.Model):
 
     __tablename__ = 'countries'
 
-    code = db.Column(db.String(3), primary_key=True)
+    code = db.Column(db.String(12), primary_key=True)
     name = db.Column(db.String(128), nullable=False)
 
     def __init__(self, name: str, code: str, **kw):

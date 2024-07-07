@@ -16,9 +16,9 @@ def create_app(config_class=None) -> Flask:
     db_url = os.environ.get("DATABASE_URL")
     app.url_map.strict_slashes = False
 
-    db_engine = db.create_engine(db_url)
-    if not database_exists(db_engine.url):
-        create_database(db_engine.url)
+    #db_engine = db.create_engine(db_url)
+    #if not database_exists(db_engine.url):
+        #create_database(db_engine.url)
             
     if config_class is None:
         env = os.environ.get('ENV')

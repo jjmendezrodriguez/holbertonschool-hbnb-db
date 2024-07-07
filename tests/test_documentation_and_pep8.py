@@ -21,6 +21,7 @@ class TestDocumentation(unittest.TestCase):
                     tree = ast.parse(file_content, filename=file_path)
                     self.check_docstrings(tree, file_path)
 
+
     def check_docstrings(self, node, file_path):
         """Check if all modules, classes, functions, and methods have docstrings."""
         if isinstance(node, ast.Module):
@@ -47,6 +48,7 @@ class TestDocumentation(unittest.TestCase):
                         )
             self.check_docstrings(child, file_path)
 
+
     def test_pep8_compliance(self):
         root_dir = "./src"
         style_guide = pycodestyle.StyleGuide()
@@ -56,6 +58,7 @@ class TestDocumentation(unittest.TestCase):
             0,
             f"Found PEP8 errors and warnings: {report.total_errors}",
         )
+
 
 
 if __name__ == "__main__":
