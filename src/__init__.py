@@ -57,6 +57,8 @@ def register_routes(app: Flask) -> None:
     from src.routes.amenities import amenities_bp
     from src.routes.reviews import reviews_bp
     from src.routes.login import login_bp
+    from src.routes.admin import admin_bp
+    from src.routes.protected import protected_bp
 
     app.register_blueprint(users_bp)
     app.register_blueprint(countries_bp)
@@ -65,6 +67,9 @@ def register_routes(app: Flask) -> None:
     app.register_blueprint(reviews_bp)
     app.register_blueprint(amenities_bp)
     app.register_blueprint(login_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(protected_bp)
+    
     
     @app.route('/')
     def index():
